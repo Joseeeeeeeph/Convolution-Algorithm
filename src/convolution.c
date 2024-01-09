@@ -13,7 +13,7 @@ float* multiplied_vector;
 float* sum_vector;
 
 void initialise_algorithm() {
-    kernel_length = 5;                                              // must be odd for now.
+    kernel_length = 9;                                              // must be odd for now.
     kernel_size = kernel_length * kernel_length;
     kernel_radius = floor(kernel_length / 2);
     overall_weight = 1.0 / kernel_size;
@@ -43,7 +43,6 @@ float** create_kernel() {
 
 float* convolve_pixel(float*** matrix, float** kernel, int x, int y) {
     int sum_vector_length = num_of_colours;
-    int saved_radius = kernel_radius;
     int special_pixels_index = 0;
     sum_vector = calloc(sum_vector_length, sizeof(float));
 
@@ -105,7 +104,8 @@ float*** convolve(float*** matrix) {
             convolved_matrix[i][j] = convolve_pixel(matrix, kernel, i, j);
         }
     }
-
+    
+    free(kernel);
     return convolved_matrix;
 }
 
