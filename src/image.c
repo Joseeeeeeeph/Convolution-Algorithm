@@ -23,7 +23,7 @@ uint8_t* read_image() {
         image_width = info_header.biWidth;
         image_height = info_header.biHeight;
 
-        pixels_size = file_header.bfSize-54;
+        pixels_size = file_header.bfSize-file_header.bfOffBits;
         pixels = malloc(pixels_size);
 
         fseek(file_p, file_header.bfOffBits, SEEK_SET);
