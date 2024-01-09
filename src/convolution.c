@@ -99,7 +99,7 @@ float*** convolve(float*** matrix) {
 
     float*** convolved_matrix = malloc(sizeof(float*) * image_height);
     for (int i = 0; i < image_height; i++) {
-        convolved_matrix[i] = malloc(sizeof(float) * image_width);
+        convolved_matrix[i] = malloc(sizeof(float*) * image_width);
         for (int j = 0; j < image_width; j++) {
             convolved_matrix[i][j] = convolve_pixel(matrix, kernel, i, j);
         }
