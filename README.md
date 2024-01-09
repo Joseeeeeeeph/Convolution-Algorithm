@@ -1,10 +1,10 @@
-# Joseeeeeeeph's Convolution Algorithm 
+# Joseeeeeeeph's Convolution Algorithm #
 
-**_NOTE: THIS IS A WIP THAT SO FAR ONLY WORKS WITH SMALL .bmp, WITH A BYTE OFFSET TO ALIGN EACH 3 COLOUR VALUES (RGB) TO 4 BYTES. LARGE .bmp WITHOUT THIS OFFSET ARE NOT SUPPORTED YET._**
+_NOTE: This is a WIP that so far only works with small .bmp, with a byte offset to align each 3 colour values (RGB) to 4 bytes. Large .bmp without this offset are not supported yet._
 
-### This is a simple image processor and convolution algorithm written in C, that currently applies 'box blur' to an image. The algorithm uses edge extension as its edge handling.
+### This is a simple image processor and convolution algorithm written in C, that currently applies 'box blur' to an image. The algorithm uses edge extension as its edge handling. ###
 
-### Run: /src/box_blur
+### Run: /src/box_blur ###
 
 The input image must be in bitmap (.bmp) format and named _"input.bmp"_. The input image must also be placed in the _input_ directory.
 
