@@ -1,14 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "include/constants.h"
 #include "include/convolution.h"
 #include "include/image.h"
 
+int convolution_type;
 int kernel_length;
 int kernel_size;
 int kernel_radius;
 extern_px* special_pixels;
-long double overall_weight;
 float* multiplied_vector;
 float* sum_vector;
 
@@ -16,8 +17,12 @@ void initialise_algorithm() {
     kernel_length = 9;                                              // must be odd for now.
     kernel_size = kernel_length * kernel_length;
     kernel_radius = floor(kernel_length / 2);
-    overall_weight = 1.0 / kernel_size;
     special_pixels = malloc(kernel_size * sizeof(extern_px));
+}
+
+long double gaussian(long double x, long double y) {
+    long double var = pow(0.5, 2);
+    return (1 / (2 * pi * var)) * powl(e, -(((x * x) + (y * y))/2 * var));
 }
 
 float* scalar_multiplication(const float* vector, const float scalar, int length) {
@@ -29,12 +34,31 @@ float* scalar_multiplication(const float* vector, const float scalar, int length
 }
 
 float** create_kernel() {
+    long double gauss_sum = 0;
     float** kernel = malloc(sizeof(float*) * kernel_length);
 
     for (int i = 0; i < kernel_length; i++) {
         kernel[i] = malloc(sizeof(float) * kernel_length);
         for (int j = 0; j < kernel_length; j++) {
-            kernel[i][j] = overall_weight;
+            switch (convolution_type) {
+                case 1:
+                    kernel[i][j] = 1.0 / kernel_size;
+                    break;
+                case 2:
+                    long double x = i - (kernel_length - 1) / 2.0;
+                    long double y = j - (kernel_length - 1) / 2.0;
+                    kernel[i][j] = gaussian(x, y);
+                    gauss_sum += kernel[i][j];
+                    break;
+            }
+        }
+    }
+
+    if (convolution_type == 2) {
+        for (int i = 0; i < kernel_length; i++) {
+            for (int j = 0; j < kernel_length; j++) {
+                kernel[i][j] /= gauss_sum;
+            }
         }
     }
 

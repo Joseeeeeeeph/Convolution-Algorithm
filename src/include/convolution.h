@@ -11,4 +11,6 @@ typedef struct {
 float*** convolve(float*** matrix);
 void free_convolution_memory();
 
+extern int convolution_type;
+
 #endif //_CONVOLUTION_H
