@@ -14,8 +14,14 @@ float* multiplied_vector;
 float* sum_vector;
 
 void initialise_algorithm() {
-    kernel_length = 9;                                              // must be odd for now.
-    kernel_size = kernel_length * kernel_length;
+    // must be odd for now; the if statement is for demonstration purposes and not necessary:
+    if (convolution_type <= 2) {
+        kernel_length = 9;
+    } else {
+        kernel_length = 3;
+    }
+
+    kernel_size = pow(kernel_length, 2);
     kernel_radius = floor(kernel_length / 2);
     special_pixels = malloc(kernel_size * sizeof(extern_px));
 }
@@ -37,19 +43,67 @@ float** create_kernel() {
     long double gauss_sum = 0;
     float** kernel = malloc(sizeof(float*) * kernel_length);
 
-    for (int i = 0; i < kernel_length; i++) {
-        kernel[i] = malloc(sizeof(float) * kernel_length);
-        for (int j = 0; j < kernel_length; j++) {
-            switch (convolution_type) {
-                case 1:
-                    kernel[i][j] = 1.0 / kernel_size;
-                    break;
-                case 2:
-                    long double x = i - (kernel_length - 1) / 2.0;
-                    long double y = j - (kernel_length - 1) / 2.0;
-                    kernel[i][j] = gaussian(x, y);
-                    gauss_sum += kernel[i][j];
-                    break;
+    if (convolution_type == 3) {
+        float hole = INT16_MAX;
+        for (int i = 0; i < kernel_length; i++) {
+            kernel[i] = malloc(sizeof(float) * kernel_length);
+            for (int j = 0; j < kernel_length; j++) {
+                kernel[i][j] = hole;
+            }
+        }
+
+        int empty_num = kernel_size;
+        int sub_kernel_size;
+        int sub_empty_num;
+
+        while (empty_num > 0) {
+            kernel[kernel_radius][kernel_radius] = pow(kernel_length - 1, 2);
+            empty_num--;
+
+            for (int w = 1; w <= kernel_radius; w++) {
+                sub_kernel_size = pow((w * 2) + 1, 2);
+                sub_empty_num = sub_kernel_size - pow(((w - 1) * 2) + 1, 2);
+                kernel[kernel_radius - w][kernel_radius] = -1 * (kernel_radius - (w-1));
+                kernel[kernel_radius][kernel_radius - w] = -1 * (kernel_radius - (w-1));
+                kernel[kernel_radius + w][kernel_radius] = -1 * (kernel_radius - (w-1));
+                kernel[kernel_radius][kernel_radius + w] = -1 * (kernel_radius - (w-1));
+                kernel[kernel_radius - w][kernel_radius - w] = -1 * (kernel_radius - w);
+                kernel[kernel_radius - w][kernel_radius + w] = -1 * (kernel_radius - w);
+                kernel[kernel_radius + w][kernel_radius - w] = -1 * (kernel_radius - w);
+                kernel[kernel_radius + w][kernel_radius + w] = -1 * (kernel_radius - w);
+                sub_empty_num -= 8;
+
+                if (sub_empty_num) {
+                    int used_i[3] = {kernel_radius, kernel_radius - w, kernel_radius + w};
+                    int used_j[3] = {kernel_radius, kernel_radius - w, kernel_radius + w};
+                    for (int i = kernel_radius - w; i <= kernel_radius + w; i++) {
+                        for (int j = kernel_radius - w; j <= kernel_radius + w; j++) {
+                            if (kernel[i][j] == hole) {
+                                kernel[i][j] = -1 * (kernel_radius - w);
+                                sub_empty_num--;
+                            }
+                        }
+                    }
+                }
+
+                empty_num -= sub_kernel_size - pow(((w - 1) * 2) + 1, 2);
+            }
+        }
+    } else {
+        for (int i = 0; i < kernel_length; i++) {
+            kernel[i] = malloc(sizeof(float) * kernel_length);
+            for (int j = 0; j < kernel_length; j++) {
+                switch (convolution_type) {
+                    case 1:
+                        kernel[i][j] = 1.0 / kernel_size;
+                        break;
+                    case 2:
+                        long double x = i - (kernel_length - 1) / 2.0;
+                        long double y = j - (kernel_length - 1) / 2.0;
+                        kernel[i][j] = gaussian(x, y);
+                        gauss_sum += kernel[i][j];
+                        break;
+                }
             }
         }
     }
@@ -88,7 +142,7 @@ float* convolve_pixel(float*** matrix, float** kernel, int x, int y) {
     }
 
     if (special_pixels_index != kernel_size) {
-        printf("PIXEL FAILED\n");
+        printf("\nPIXEL FAILED\n");
         float* green = malloc(sizeof(float) * 3);
         green[0] = 0.0;
         green[1] = 255.0;
@@ -126,6 +180,14 @@ float*** convolve(float*** matrix) {
         convolved_matrix[i] = malloc(sizeof(float*) * image_width);
         for (int j = 0; j < image_width; j++) {
             convolved_matrix[i][j] = convolve_pixel(matrix, kernel, i, j);
+        }
+    }
+
+    if (convolution_type == 3) {
+        for (int i = 0; i < image_height; i++) {
+            for (int j = 0; j < image_width; j++) {
+                convolved_matrix[i][j] = greyscale(convolved_matrix[i][j]);
+            }
         }
     }
     

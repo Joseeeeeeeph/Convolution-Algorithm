@@ -97,3 +97,10 @@ void write_image(float*** matrix) {
 
     free(output);
 }
+
+float* greyscale(float* pixel) {
+    for (int n = 0; n < num_of_colours; n++) {
+        pixel[n] = pixel[0] * 0.114 + pixel[1] * 0.587 + pixel[2] * 0.299;
+    }
+    return pixel;
+}

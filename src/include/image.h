@@ -42,5 +42,6 @@ uint8_t* read_image();
 void test_write();
 float*** create_matrix();
 void write_image();
+float* greyscale();
 
 #endif //_IMAGE_H

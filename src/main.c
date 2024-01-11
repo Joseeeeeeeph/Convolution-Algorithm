@@ -8,8 +8,12 @@ int main() {
     float*** image = create_matrix(pixel_data);
     free(pixel_data);
 
-    printf("Please select an option below:\n\n 1. Box blur\n\n 2. Gaussian blur\n\n>> ");
-    scanf("%d", &convolution_type);
+    convolution_type = 0;
+    printf("Please select an option below:\n\n 1. Box blur\n\n 2. Gaussian blur\n\n 3. Laplacian edge-detection\n\n>> ");
+    while (convolution_type < 1 || convolution_type > 3) {
+        scanf("%d", &convolution_type);
+        if (convolution_type < 1 || convolution_type > 3) printf("\nPlease type a number shown above.\n\n>> ");
+    }
 
     float*** convolved_image = convolve(image);
 
