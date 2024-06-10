@@ -2,7 +2,7 @@
 
 _NOTE: This is a WIP that so far only works with small .bmp, with a byte offset to align each 3 colour values (RGB) to 4 bytes. Large .bmp without this offset are not supported yet._
 
-### This is a simple image processor and convolution algorithm written in C, that currently applies either box blur, Gaussian blur or edge-detection to an image. The algorithm uses edge-extension as its edge handling. ###
+## This is a simple image processor and convolution algorithm written in C, that currently applies either box blur, Gaussian blur or edge-detection to an image. The algorithm uses edge-extension as its edge handling. ###
 
 ### Run: ./convolve ###
 
