@@ -15,7 +15,7 @@ int pixels_size;
 
 uint8_t* read_image() {
     uint8_t* pixels;
-    file_p = fopen("../input/input.bmp", "rb");
+    file_p = fopen("input/input.bmp", "rb");
 
     if (file_p != NULL) {
         fread(&file_header, sizeof(file_header), 1, file_p);
@@ -82,7 +82,7 @@ uint8_t* create_pixels(float*** matrix) {
 void write_image(float*** matrix) {
     uint8_t* output = create_pixels(matrix);
 
-    file_p = fopen("../output/output.bmp", "wb");
+    file_p = fopen("output/output.bmp", "wb");
 
     if (file_p != NULL) {
         fwrite(&file_header, sizeof(file_header), 1, file_p);
