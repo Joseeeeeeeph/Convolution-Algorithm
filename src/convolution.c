@@ -13,6 +13,7 @@ extern_px* special_pixels;
 float* multiplied_vector;
 float* sum_vector;
 
+// Initialises kernel properties:
 void initialise_algorithm() {
     // must be odd for now; the if statement is for demonstration purposes and not necessary:
     if (convolution_type <= 2) {
@@ -39,6 +40,7 @@ float* scalar_multiplication(const float* vector, const float scalar, int length
     return multiplied_vector;
 }
 
+// Creates kernel from initialised values:
 float** create_kernel() {
     long double gauss_sum = 0;
     float** kernel = malloc(sizeof(float*) * kernel_length);
@@ -119,6 +121,7 @@ float** create_kernel() {
     return kernel;
 }
 
+// Convolves a pixel; returns a green pixel in case of failure:
 float* convolve_pixel(float*** matrix, float** kernel, int x, int y) {
     int sum_vector_length = num_of_colours;
     int special_pixels_index = 0;
@@ -170,6 +173,7 @@ float* convolve_pixel(float*** matrix, float** kernel, int x, int y) {
     return sum_vector;
 }
 
+// Convolves entire matrix:
 float*** convolve(float*** matrix) {
     initialise_algorithm();
 

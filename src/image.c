@@ -12,7 +12,21 @@ int image_width;
 int image_height;
 int num_of_colours;
 int pixels_size;
+int offset;
 
+// Checks if data has a byte offset (currently checks every 4 bytes for FF):
+int offset_check(uint8_t* data) {
+    int offset_bytes = 4;
+    for (int i = offset_bytes - 1; i < pixels_size; i += offset_bytes) {
+        if (data[i] != 255) {
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
+// Reads the input.bmp data and creates an array of pixels:
 uint8_t* read_image() {
     uint8_t* pixels;
     file_p = fopen("input/input.bmp", "rb");
@@ -30,12 +44,16 @@ uint8_t* read_image() {
         fread(pixels, sizeof(uint8_t), pixels_size, file_p);
 
         fclose(file_p);
+
+        offset = offset_check(pixels);
     } else {
         printf("Error opening file.");
     }
+
     return pixels;
 }
 
+// Creates a matrix of each pixel (a third order tensor of each colour channel) from the pixel data:
 float*** create_matrix(uint8_t* pixels) {
     num_of_colours = 3;
     float*** matrix = malloc(sizeof(float*) * image_height);
@@ -54,13 +72,16 @@ float*** create_matrix(uint8_t* pixels) {
                 pixel_index++;
                 matrix[i][j][n] = pixels[pixel_index];
             }
-            pixel_index++;
+            if (offset) {
+                pixel_index++;
+            }
         }
     }
 
     return matrix;
 }
 
+// Converts the matrix back into pixel data:
 uint8_t* create_pixels(float*** matrix) {
     uint8_t* pixels = malloc(pixels_size);
 
@@ -71,14 +92,17 @@ uint8_t* create_pixels(float*** matrix) {
                 pixel_index++;
                 pixels[pixel_index] = round(matrix[i][j][n]);
             }
-            pixel_index++;
-            pixels[pixel_index] = 255;
+            if (offset) {
+                pixel_index++;
+                pixels[pixel_index] = 255;
+            }
         }
     }
 
     return pixels;
 }
 
+// Writes the pixel data as output.bmp:
 void write_image(float*** matrix) {
     uint8_t* output = create_pixels(matrix);
 
