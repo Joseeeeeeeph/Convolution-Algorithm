@@ -36,11 +36,11 @@ typedef struct tagBITMAPINFOHEADER
 
 extern int image_width;
 extern int image_height;
-extern int num_of_colours;
+extern const int NUM_OF_COLOURS;
 
-uint8_t* read_image();
-float*** create_matrix(uint8_t* pixels);
+float*** read_image();
 void write_image(float*** matrix);
 float* greyscale(float* pixel);
+void free_image_memory();
 
 #endif //_IMAGE_H

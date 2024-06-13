@@ -123,7 +123,7 @@ float** create_kernel() {
 
 // Convolves a pixel; returns a green pixel in case of failure:
 float* convolve_pixel(float*** matrix, float** kernel, int x, int y) {
-    int sum_vector_length = num_of_colours;
+    int sum_vector_length = NUM_OF_COLOURS;
     int special_pixels_index = 0;
     sum_vector = calloc(sum_vector_length, sizeof(float));
 

@@ -4,9 +4,7 @@
 #include "include/image.h"
 
 int main() {
-    uint8_t* pixel_data = read_image();
-    float*** image = create_matrix(pixel_data);
-    free(pixel_data);
+    float*** image = read_image();
 
     // Operation Selection:
     convolution_type = 0;
@@ -22,5 +20,8 @@ int main() {
     free(image);
 
     write_image(convolved_image);
+
+    free_image_memory();
+
     return 0;
 }
