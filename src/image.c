@@ -8,7 +8,7 @@ FILE* file_p;
 BITMAPFILEHEADER file_header;
 BITMAPINFOHEADER info_header;
 
-const int NUM_OF_COLOURS = 3;
+const int COLOUR_CHANNELS = 3;
 
 int image_width;
 int image_height;
@@ -40,7 +40,7 @@ int offset_check(uint8_t* data) {
 
     int n = 0;
     if (offset_bytes == image_width) {
-        for (int i = (image_width * NUM_OF_COLOURS); i < pixels_size; i += ((image_width * NUM_OF_COLOURS) + 1)) {
+        for (int i = (image_width * COLOUR_CHANNELS); i < pixels_size; i += ((image_width * COLOUR_CHANNELS) + 1)) {
             if (i + 3 < pixels_size) {
                 if (((data[i] == data[i - 3] || data[i] == data[i - 2] || data[i] == data[i - 1]) || (data[i] == data[i + 1] || data[i] == data[i + 2] || data[i] == data[i + 3]))
                 && ((data[i - 3] != 0 || data[i - 2] != 0 || data[i - 1] != 0) && (data[i + 1] != 0 || data[i + 2] != 0 || data[i + 3] != 0))) {
@@ -87,7 +87,7 @@ uint8_t* read_data() {
 
 // Creates a matrix of each pixel (a third order tensor of each colour channel) from the pixel data:
 float*** read_image() {
-    //NUM_OF_COLOURS = 3;
+    //COLOUR_CHANNELS = 3;
     uint8_t* pixels = read_data();
 
     float*** matrix = malloc(sizeof(float*) * image_height);
@@ -95,7 +95,7 @@ float*** read_image() {
     for (int i = 0; i < image_height; i++) {
         matrix[i] = malloc(sizeof(float*) * image_width);
         for (int j = 0; j < image_width; j++) {
-            matrix[i][j] = malloc(NUM_OF_COLOURS * sizeof(float));
+            matrix[i][j] = malloc(COLOUR_CHANNELS * sizeof(float));
         }
     }
 
@@ -106,9 +106,9 @@ float*** read_image() {
 
     for (int i = 0; i < image_height; i++) {
         for (int j = 0; j < image_width; j++) {
-            for (int n = 0; n < NUM_OF_COLOURS; n++) {
+            for (int n = 0; n < COLOUR_CHANNELS; n++) {
                 pixel_index++;
-                if (offset == 2 && (pixel_index % (image_width * NUM_OF_COLOURS) == increment && pixel_index != 0) && !locked) {
+                if (offset == 2 && (pixel_index % (image_width * COLOUR_CHANNELS) == increment && pixel_index != 0) && !locked) {
                     byte_index++;
                     offset_array[byte_index] = (uint8_t)pixels[pixel_index];
                     n--;
@@ -139,9 +139,9 @@ uint8_t* create_pixels(float*** matrix) {
 
     for (int i = 0; i < image_height; i++) {
         for (int j = 0; j < image_width; j++) {
-            for (int n = 0; n < NUM_OF_COLOURS; n++) {
+            for (int n = 0; n < COLOUR_CHANNELS; n++) {
                 pixel_index++;
-                if (offset == 2 && (pixel_index % (image_width * NUM_OF_COLOURS) == increment && pixel_index != 0) && !locked) {
+                if (offset == 2 && (pixel_index % (image_width * COLOUR_CHANNELS) == increment && pixel_index != 0) && !locked) {
                     byte_index++;
                     pixels[pixel_index] = offset_array[byte_index];
                     n--;
@@ -183,7 +183,7 @@ void write_image(float*** matrix) {
 }
 
 float* greyscale(float* pixel) {
-    for (int n = 0; n < NUM_OF_COLOURS; n++) {
+    for (int n = 0; n < COLOUR_CHANNELS; n++) {
         pixel[n] = pixel[0] * 0.114 + pixel[1] * 0.587 + pixel[2] * 0.299;
     }
 
