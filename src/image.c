@@ -77,7 +77,6 @@ uint8_t* read_data() {
         fclose(file_p);
 
         offset = offset_check(pixels);
-        printf("Offset: %d\n", offset);
     } else {
         printf("Error opening file.");
     }
