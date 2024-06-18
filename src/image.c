@@ -58,7 +58,7 @@ int offset_check(uint8_t* data) {
 }
 
 // Reads the input.bmp data and creates an array of pixels:
-uint8_t* read_data() {
+uint8_t* read_data(void) {
     uint8_t* pixels;
     file_p = fopen("input/input.bmp", "rb");
 
@@ -85,7 +85,7 @@ uint8_t* read_data() {
 }
 
 // Creates a matrix of each pixel (a third order tensor of each colour channel) from the pixel data:
-float*** read_image() {
+float*** read_image(void) {
     //COLOUR_CHANNELS = 3;
     uint8_t* pixels = read_data();
 
@@ -189,6 +189,6 @@ float* greyscale(float* pixel) {
     return pixel;
 }
 
-void free_image_memory() {
+void free_image_memory(void) {
     free(offset_array);
 }

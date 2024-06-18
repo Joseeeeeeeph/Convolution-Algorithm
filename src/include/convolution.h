@@ -9,7 +9,7 @@ typedef struct {
 } extern_px;
 
 float*** convolve(float*** matrix);
-void free_convolution_memory();
+void free_convolution_memory(void);
 
 extern int convolution_type;
 

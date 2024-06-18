@@ -14,7 +14,7 @@ float* multiplied_vector;
 float* sum_vector;
 
 // Initialises kernel properties:
-void initialise_algorithm() {
+void initialise_algorithm(void) {
     // must be odd for now; the if statement is for demonstration purposes and not necessary:
     if (convolution_type <= 2) {
         kernel_length = 9;
@@ -41,7 +41,7 @@ float* scalar_multiplication(const float* vector, const float scalar, int length
 }
 
 // Creates kernel from initialised values:
-float** create_kernel() {
+float** create_kernel(void) {
     long double gauss_sum = 0;
     float** kernel = malloc(sizeof(float*) * kernel_length);
 
@@ -199,7 +199,7 @@ float*** convolve(float*** matrix) {
     return convolved_matrix;
 }
 
-void free_convolution_memory() {
+void free_convolution_memory(void) {
     free(multiplied_vector);
     free(sum_vector);
     free(special_pixels);

@@ -38,9 +38,9 @@ extern int image_width;
 extern int image_height;
 extern const int COLOUR_CHANNELS;
 
-float*** read_image();
+float*** read_image(void);
 void write_image(float*** matrix);
 float* greyscale(float* pixel);
-void free_image_memory();
+void free_image_memory(void);
 
 #endif //_IMAGE_H
