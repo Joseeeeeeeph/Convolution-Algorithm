@@ -19,7 +19,7 @@ void initialise_algorithm(void) {
     if (convolution_type <= 2) {
         kernel_length = 9;
     } else {
-        kernel_length = 3;
+        kernel_length = 5;
     }
 
     kernel_size = pow(kernel_length, 2);

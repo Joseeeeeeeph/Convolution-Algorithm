@@ -15,7 +15,7 @@ int image_height;
 int pixels_size;
 int offset;
 uint8_t* offset_array;
-int offset_byte_value;
+uint8_t offset_byte_value;
 
 // Checks if data has a byte offset (either every 4 bytes, or at the end of each line):
 int offset_check(uint8_t* data) {
@@ -127,6 +127,16 @@ float*** read_image(void) {
     return matrix;
 }
 
+uint8_t advanced_round(float f) {
+    if (f < 0) {
+        return 0;
+    } else if (f > 255) {
+        return 255;
+    } else {
+        return (uint8_t)round(f);
+    }
+}
+
 // Converts the matrix back into pixel data:
 uint8_t* create_pixels(float*** matrix) {
     uint8_t* pixels = malloc(pixels_size);
@@ -147,7 +157,7 @@ uint8_t* create_pixels(float*** matrix) {
                     increment++;
                     locked = 1;
                 } else {
-                    pixels[pixel_index] = round(matrix[i][j][n]);
+                    pixels[pixel_index] = advanced_round(matrix[i][j][n]);
                     locked = 0;
                 }
             }
