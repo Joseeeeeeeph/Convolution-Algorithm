@@ -127,16 +127,6 @@ float*** read_image(void) {
     return matrix;
 }
 
-uint8_t advanced_round(float f) {
-    if (f < 0) {
-        return 0;
-    } else if (f > 255) {
-        return 255;
-    } else {
-        return (uint8_t)round(f);
-    }
-}
-
 // Converts the matrix back into pixel data:
 uint8_t* create_pixels(float*** matrix) {
     uint8_t* pixels = malloc(pixels_size);
@@ -157,7 +147,7 @@ uint8_t* create_pixels(float*** matrix) {
                     increment++;
                     locked = 1;
                 } else {
-                    pixels[pixel_index] = advanced_round(matrix[i][j][n]);
+                    pixels[pixel_index] = (uint8_t)round(matrix[i][j][n]);
                     locked = 0;
                 }
             }

@@ -147,9 +147,9 @@ float* convolve_pixel(float*** matrix, float** kernel, int x, int y) {
     if (special_pixels_index != kernel_size) {
         printf("\nPIXEL FAILED\n");
         float* green = malloc(sizeof(float) * 3);
-        green[0] = 0.0;
-        green[1] = 255.0;
-        green[2] = 0.0;
+        green[0] = 0.0f;
+        green[1] = 255.0f;
+        green[2] = 0.0f;
         return green;
     }
 
@@ -173,6 +173,17 @@ float* convolve_pixel(float*** matrix, float** kernel, int x, int y) {
     return sum_vector;
 }
 
+float* bind(float* f) {
+    for (int i = 0; i < COLOUR_CHANNELS; i++) {
+        if (f[i] < 0) {
+            f[i] = 0.0f;
+        } else if (f[i] > 255) {
+            f[i] = 255.0f;
+        }
+    }
+    return f;
+}
+
 // Convolves entire matrix:
 float*** convolve(float*** matrix) {
     initialise_algorithm();
@@ -183,7 +194,7 @@ float*** convolve(float*** matrix) {
     for (int i = 0; i < image_height; i++) {
         convolved_matrix[i] = malloc(sizeof(float*) * image_width);
         for (int j = 0; j < image_width; j++) {
-            convolved_matrix[i][j] = convolve_pixel(matrix, kernel, i, j);
+            convolved_matrix[i][j] = bind(convolve_pixel(matrix, kernel, i, j));
         }
     }
 
